@@ -1,0 +1,31 @@
+version: '3.9'
+
+services:
+  maven:
+    build:
+      dockerfile: dockerfile
+    volumes:
+      - my_data:/data
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 8s
+        max_attempts: 3
+
+  python:
+    image: python:3
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+    depends_on:
+      maven: # waits till `maven` service will complete succesfully
+        condition: service_completed_successfully
+    volumes:
+      - ./reader.py:/app/reader.py
+      - my_data:/data
+    command: python /app/reader.py
+
+volumes:
+  my_data:
