@@ -52,5 +52,3 @@ services:
     volumes:
       - ./maven_data:/data
 `
-
-# Git
